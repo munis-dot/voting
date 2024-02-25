@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 mongoose
   .connect(
-    'mongodb://127.0.0.1:27017/voting',
+    'mongodb+srv://munidb:muniak47*@cluster0.66r4gby.mongodb.net/voting',
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("connected successfully"))
@@ -73,6 +73,7 @@ app.post('/updatevoter',(req,res)=>{
   usermodel.updateOne(myquery, newvalues, function(err, res) {
     if (err) throw err;
     console.log("1 document updated");
+})
 })
 app.post('/addcandidate', upload, (req, res) => {
   console.log(req.body)
