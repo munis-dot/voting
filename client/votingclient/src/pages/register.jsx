@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useContract, useContractWrite } from "@thirdweb-dev/react";
 import Header from '../components/header'
 import axios from 'axios';
+import { contractAddress } from '../env';
 function register() {
   const [details,setdetails]=useState({});
   const [ima,setima]=useState();
@@ -36,7 +37,7 @@ function register() {
       const config = {     
         headers: { 'content-type': 'multipart/form-data' }
       }
-      const { contract } = useContract("0xa513E6E4b8f2a923D98304ec87F64353C4D5C853");
+      const { contract } = useContract(contractAddress);
       const { mutateAsync: register, isLoading } = useContractWrite(contract, "register")
       const call = async () => {
         try {

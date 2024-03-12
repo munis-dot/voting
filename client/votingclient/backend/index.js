@@ -100,7 +100,7 @@ app.post('/addcandidate', upload, (req, res) => {
 
 app.post('/checkvoter', async (req, res) => {
   try {
-    const result = await votermodel.find({address:req.body.ad}, {alreadyvoted: 1});
+    const result = await votermodel.find({address:req.body.address}, {alreadyvoted: 1});
     console.log(result);
     res.send(result);
   } catch (err) {

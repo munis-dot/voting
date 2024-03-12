@@ -3,10 +3,11 @@ import { useContract, useContractRead } from "@thirdweb-dev/react";
 import axios from 'axios';
 import { candidatecontext } from '../context/candidatecontext';
 import { ffcontext } from '../context/ffcontext';
+import { contractAddress } from '../env';
 function Resulttable() {
     const{cand,setcand}=useContext(candidatecontext)
     const{ff,setff}=useContext(ffcontext)
-    const { contract } = useContract("0xa513E6E4b8f2a923D98304ec87F64353C4D5C853");
+    const { contract } = useContract(contractAddress);
     const { data, isLoading } = useContractRead(contract, "getcanditates")
     
    

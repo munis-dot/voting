@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useContract, useContractRead,useContractWrite } from "@thirdweb-dev/react";
 import axios from 'axios';
+import { contractAddress } from '../env';
 function tables() {
    const[candidate,setcandidate]=useState([{profileimg:{data:{data:78797}},partyimg:{data:{data:78797}}},{profileimg:{data:{data:78797}},partyimg:{data:{data:78797}}}]);
   
@@ -12,7 +13,7 @@ function tables() {
       .catch()
    },[])
 
-   const { contract } = useContract("0xa513E6E4b8f2a923D98304ec87F64353C4D5C853");
+   const { contract } = useContract(contractAddress);
    const { data, isLoading } = useContractRead(contract, "getcanditates")
    const { mutateAsync: vote, isLoadings } = useContractWrite(contract, "vote")
    let candidates=data;
