@@ -54,7 +54,7 @@ import { voterContext } from '../context/voterContext';
 
 const ConnectWallet = () => {
 
-  const {setVoter} = useContext(voterContext)
+  const {voter, setVoter} = useContext(voterContext)
   const { contract } = useContract(contractAddress);
   const { data, isLoading } = useContractRead(contract, "owner")
   const address = useAddress();
@@ -66,8 +66,8 @@ const ConnectWallet = () => {
     if(address){
       axios.post("http://localhost:8000/checkvoter", { address: address })
       .then(res=>{
-        setstate(()=>res.data?.alreadyVoted);
-        setVoter(()=>res.data?.alreadyVoted)
+        setstate(()=>res.data?.[0]?.alreadyvoted);
+        setVoter(()=>res.data?.[0]?.alreadyvoted)
       })
       .catch(err=>console.log(err));
     }
@@ -90,7 +90,7 @@ const ConnectWallet = () => {
         </>
         :
         <>
-        {state && address ? 
+        {state && voter && address ? 
         <button className="bg-black p-4 mt-4 rounded-lg text-white font-lg text-xl" onClick={()=>navigation('/checkResult')}>Check Result</button>
         :
         <button className="bg-black p-4 mt-4 rounded-lg text-white font-lg text-xl" onClick={()=>navigation('/voteNow')}>Vote Now</button>

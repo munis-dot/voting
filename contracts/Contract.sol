@@ -35,9 +35,8 @@ contract Mytoken{
         require(_to != address(0), "invalid address");
         allowed[msg.sender][_to] = _value;
         emit Approved(msg.sender, _to, _value);
-
     }
-
+    
     function allowance(address _owner, address _Receiver)external view returns(uint){
         return allowed[_owner][_Receiver];
     }
