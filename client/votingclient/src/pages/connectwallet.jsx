@@ -45,14 +45,16 @@
 // };
 // export default Connectwallets;
 
-import React, { useEffect, useState } from 'react'
-import { Web3Button, ConnectWallet, useAddress, useContract, useContractRead } from "@thirdweb-dev/react";
+import React, { useContext, useEffect, useState } from 'react'
+import { ConnectWallet as Connecter, useAddress, useContract, useContractRead } from "@thirdweb-dev/react";
 import { contractAddress } from '../env';
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import { voterContext } from '../context/voterContext';
 
-const Connectwallet = () => {
+const ConnectWallet = () => {
 
+  const {setVoter} = useContext(voterContext)
   const { contract } = useContract(contractAddress);
   const { data, isLoading } = useContractRead(contract, "owner")
   const address = useAddress();
@@ -63,7 +65,10 @@ const Connectwallet = () => {
   useEffect(()=>{
     if(address){
       axios.post("http://localhost:8000/checkvoter", { address: address })
-      .then(res=>setstate(()=>res.data?.alreadyVoted))
+      .then(res=>{
+        setstate(()=>res.data?.alreadyVoted);
+        setVoter(()=>res.data?.alreadyVoted)
+      })
       .catch(err=>console.log(err));
     }
   },[address])
@@ -71,7 +76,7 @@ const Connectwallet = () => {
   const navigation = useNavigate();
   return (
     <>
-      <ConnectWallet
+      <Connecter
         style={{ backgroundColor: 'white', color: '#3f3d56' }}
         theme={"light"}
         modalSize={"wide"}
@@ -86,7 +91,7 @@ const Connectwallet = () => {
         :
         <>
         {state && address ? 
-        <button className="bg-black p-4 mt-4 rounded-lg text-white font-lg text-xl" onClick={()=>navigation('/CheckResult')}>Check Result</button>
+        <button className="bg-black p-4 mt-4 rounded-lg text-white font-lg text-xl" onClick={()=>navigation('/checkResult')}>Check Result</button>
         :
         <button className="bg-black p-4 mt-4 rounded-lg text-white font-lg text-xl" onClick={()=>navigation('/voteNow')}>Vote Now</button>
         }
@@ -96,4 +101,4 @@ const Connectwallet = () => {
   )
 }
 
-export default Connectwallet
+export default ConnectWallet

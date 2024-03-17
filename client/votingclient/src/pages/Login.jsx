@@ -1,6 +1,6 @@
 import React from 'react'
 import img from '../images/vote.svg'
-import Connectwallet from './Connectwallet'
+import ConnectWallet from './ConnectWallet'
 const Login = () => {
     return (
         <>
@@ -10,7 +10,7 @@ const Login = () => {
                     <img src={img} alt='vote'></img>
                 </div>
                 <div className='loginBtn'>
-                    <Connectwallet />
+                    <ConnectWallet />
                 </div>
             </div>
         </>

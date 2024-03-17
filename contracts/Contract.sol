@@ -72,7 +72,7 @@ contract Contract is Mytoken{
         //         voteCount: 0
         //     }));
         // }
-        votingEndTime = block.timestamp + (30 * 1 minutes);
+        votingEndTime = block.timestamp + (30 * 60);
     }
 
     function register(string memory candidateName) public{

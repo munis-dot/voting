@@ -78,10 +78,40 @@
 // }
 
 // export default voterregister
-import React from 'react'
+import React, { useState } from 'react'
 import img from '../images/register.svg'
+import { useContract, useContractWrite } from "@thirdweb-dev/react";
+import axios from 'axios';
+import { contractAddress } from '../env';
 
 const VoterRegister = () => {
+
+  const { contract } = useContract(contractAddress);
+  const { mutateAsync: transfer, isLoading } = useContractWrite(contract, "transfer")
+
+  const [token, setToken] = useState('');
+
+  const call = async () => {
+    try {
+      const data = await transfer({ args: [token, 1] });
+      console.info("contract call successs", data);
+    } catch (err) {
+      console.error("contract call failure", err);
+    }
+  }
+
+  const submit = (e) => {
+    call().then(()=>{
+      axios.post("http://localhost:8000/addVoter", {address:token})
+      .then(res => {
+        setToken('');
+        alert('Voter Registered Successfully')
+      })
+      .catch()
+    })
+    
+  }
+
   return (
     <>
       <h1 className='heading'>Voter Registeration</h1>
@@ -93,8 +123,9 @@ const VoterRegister = () => {
           <div className='formBox'>
             <div className='form'>
               <h1 className='text-black text-2xl'>Send Token</h1>
-              <input type='password' className='inputBox' placeholder='Enter Voter Address' />
-              <button onClick={''} className='actionButton'>Send Token And Register the Voter</button>
+              <h2 className='header'>VOTER METAMASK ADDRESS</h2>
+              <input type='password' value={token} onChange={(e) => setToken(() => e.target?.value)} className='inputBox' placeholder='Enter Voter Address' />
+              <button onClick={submit} className='actionButton'>Send Token And Register the Voter</button>
             </div>
           </div>
         </div>

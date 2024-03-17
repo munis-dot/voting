@@ -60,6 +60,7 @@ body {
    justify-content: center;
    align-items: center;
    text-align: center;
+   padding: 20px;
 }
 
 .sideImg{
@@ -75,20 +76,32 @@ body {
 }
 
 .inputBox{
-   width: 90%;
+   width: 100%;
    border: 1px solid black;
    height: 50px;
    border-radius: 12px;
    padding: 5px;
-   margin-top: 50px;
 }
 
 .actionButton{
-   width: 90%;
+   width: 100%;
    border: 1px solid black;
    border-radius: 12px;
    height: 50px;
    margin-top: 50px;
    color: white;
    background-color: #3f3d56;
+}
+.header{
+   text-align: left;
+   margin-top: 50px;
+   margin-bottom: 10px;
+   font-weight: bold;
+}
+.candidateRegister{
+   width: 45%;
+   padding: 20px;
+   border: 1px solid #ffffff;
+   border-radius: 24px;
+   margin-right: 5px;
 }

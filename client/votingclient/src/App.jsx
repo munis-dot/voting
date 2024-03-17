@@ -28,22 +28,30 @@
 //       </candidatecontext.Provider>
 //   );
 // }
-import React from 'react'
-import { BrowserRouter,Route,Routes } from "react-router-dom";
+import React, { useState } from 'react'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from './pages/Login'
 import VoterRegister from './pages/VoterRegister';
+import Vote from './pages/Vote';
+import CandidateRegister from './pages/CandidateRegister';
+import Home from './pages/Home';
+import { voterContext } from './context/voterContext';
 const App = () => {
+  const [voter,setVoter] = useState({});
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<Login />} />
-          {/* <Route path="/vote" element={<Vote />} />
-          <Route path="/result" element={<Result />} />
-          <Route path="/register" element={<Register />} /> */}
-          <Route path="/voterRegister" element={<VoterRegister/>} />
-        </Routes>
-      </BrowserRouter>
+      <voterContext.Provider value={{voter,setVoter}}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/*" element={<Login />} />
+            <Route path="/voteNow" element={<Vote />} />
+            <Route path="/checkResult" element={<Home />} />
+            <Route path="/candidateRegister" element={<CandidateRegister />} />
+            <Route path="/voterRegister" element={<VoterRegister />} />
+          </Routes>
+        </BrowserRouter>
+      </voterContext.Provider>
+
     </>
   )
 }
