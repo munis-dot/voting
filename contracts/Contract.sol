@@ -2,48 +2,55 @@
 
 pragma solidity ^0.8.7;
 
-contract Mytoken{
+contract Mytoken {
     string public name;
     string public symbol;
     uint public decimals;
     uint public totalSupply;
 
-    constructor(){
+    constructor() {
         name = "tamilnadu";
         symbol = "TN";
         decimals = 1;
         totalSupply = 100;
         balanceOf[msg.sender] = totalSupply;
     }
-    
-    mapping(address => uint)public balanceOf;
-    mapping(address => mapping(address => uint))public allowed;
+
+    mapping(address => uint) public balanceOf;
+    mapping(address => mapping(address => uint)) public allowed;
 
     event Transfer(address indexed _from, address indexed _to, uint value);
     event Approved(address indexed _from, address indexed _to, uint value);
 
-    function transfer(address _to, uint _value)external returns(bool){
+    function transfer(address _to, uint _value) external returns (bool) {
         require(_to != address(0), "to address is invalid");
-        require(_value <= balanceOf[msg.sender],"Insufficient ether");
+        require(_value <= balanceOf[msg.sender], "Insufficient ether");
         balanceOf[msg.sender] -= _value;
         balanceOf[_to] += _value;
         emit Transfer(msg.sender, _to, _value);
         return true;
     }
 
-    function approve(address _to, uint _value)external {
+    function approve(address _to, uint _value) external {
         require(_to != address(0), "invalid address");
         allowed[msg.sender][_to] = _value;
         emit Approved(msg.sender, _to, _value);
     }
-    
-    function allowance(address _owner, address _Receiver)external view returns(uint){
+
+    function allowance(
+        address _owner,
+        address _Receiver
+    ) external view returns (uint) {
         return allowed[_owner][_Receiver];
     }
 
-    function transferFrom(address _from, address _to, uint _value)external returns(bool){
+    function transferFrom(
+        address _from,
+        address _to,
+        uint _value
+    ) external returns (bool) {
         require(_value <= balanceOf[_from], "Insufficient ether");
-        require(allowed[_from][_to] <= _value,"Insufficient ether");
+        require(allowed[_from][_to] <= _value, "Insufficient ether");
         balanceOf[_from] -= _value;
         allowed[_from][_to] -= _value;
         balanceOf[_to] += _value;
@@ -51,18 +58,17 @@ contract Mytoken{
         return true;
     }
 }
-contract Contract is Mytoken{
-   
+contract Contract is Mytoken {
     struct Candidate {
         string name;
         uint voteCount;
     }
-    
+
     mapping(address => bool) public voters;
     Candidate[] public candidates;
     uint public votingEndTime;
     address public owner;
-    
+
     constructor() {
         owner = msg.sender;
         // for (uint i = 0; i < candidateNames.length; i++) {
@@ -74,24 +80,21 @@ contract Contract is Mytoken{
         votingEndTime = block.timestamp + (30 * 60);
     }
 
-    function register(string memory candidateName) public{
-         require(msg.sender == owner, "Only the owner can register");
-        candidates.push(Candidate({
-                name: candidateName,
-                voteCount: 0
-            }));
+    function register(string memory candidateName) public {
+        require(msg.sender == owner, "Only the owner can register");
+        candidates.push(Candidate({name: candidateName, voteCount: 0}));
     }
-    
+
     function vote(uint candidateIndex) public {
         require(!voters[msg.sender], "Already voted");
-        require(balanceOf[msg.sender]==1,"invalid token");
+        require(balanceOf[msg.sender] == 1, "invalid token");
         require(candidateIndex < candidates.length, "Invalid candidate index");
         require(block.timestamp < votingEndTime, "Voting has ended");
         candidates[candidateIndex].voteCount++;
         voters[msg.sender] = true;
-        balanceOf[msg.sender]=0;
+        balanceOf[msg.sender] = 0;
     }
-    
+
     function getWinner() public view returns (string memory) {
         require(block.timestamp >= votingEndTime, "Voting has not ended yet");
         uint winningVoteCount = 0;
@@ -101,17 +104,18 @@ contract Contract is Mytoken{
                 winningVoteCount = candidates[i].voteCount;
                 winningCandidateIndex = i;
             }
-           
         }
         return candidates[winningCandidateIndex].name;
     }
-    
-    function endVoting() public {
+
+    function endVoting(address _to, uint _value) external returns (bool) {
         require(msg.sender == owner, "Only the owner can end the voting");
-        // require(block.timestamp >= votingEndTime, "Voting has not ended yet");
-         votingEndTime=block.timestamp;
+        votingEndTime = block.timestamp;
+        emit Transfer(msg.sender, _to, _value);
+        return true;
     }
-    function getcanditates() public view returns(Candidate[] memory){
+
+    function getcanditates() public view returns (Candidate[] memory) {
         return candidates;
     }
 }

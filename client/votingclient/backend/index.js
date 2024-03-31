@@ -11,7 +11,14 @@ const imageModel = require("./models/models.js");
 const votermodel = require("./models/votermodel.js")
 const registerindex = require("./models/registerindex")
 const candidatemodel = require("./models/candidateregister.js");
+const tokenmodel = require('./models/tokenRegistration.js')
 const { db } = require("./models/registerindex");
+const { ThirdwebSDK } = require('@thirdweb-dev/sdk');
+const { firebaseNotification } = require("./firebaseNotification.js");
+const sdk = new ThirdwebSDK("http://127.0.0.1:8545");
+const { readContract, resolveMethod } = require("thirdweb");
+const { contract } = require('./contract.js');
+const { contractAdr } = require("./env.js");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -122,8 +129,73 @@ app.get('/getcandidate', async (req, res) => {
   }
 })
 
+app.get('/getTokens', async (req, res) => {
+  try {
+    const result = await tokenmodel.find();
+    res.send(result);
+  }
+  catch (e) {
+    throw e;
+  }
+})
+
+app.post('/userRegistration', async (req, res) => {
+  console.log("userRegistration", req.body.registrationToken)
+  const token = tokenmodel({
+    token: req.body.registrationToken
+  })
+  token.save().then(result => {
+    res.send(result)
+  })
+    .catch(err => console.log(err))
+})
 
 
+
+app.get('/trigger', async (req, res) => {
+  await firebaseNotification()
+})
+
+const trigger = async () => {
+  try {
+    const data = await readContract({
+      contract,
+      method: resolveMethod("getWinner"),
+    });
+    console.log("trigger", data)
+    if (data) {
+      const result = await tokenmodel.find();
+      console.log(result)
+      if (result?.length>0) {
+        let tokens = result.map(item=>item.token)
+        firebaseNotification(tokens, data);
+      }
+    }
+  }
+  catch (e) {
+    console.log(e)
+  }
+
+}
+
+async function runEvents() {
+  try {
+    const contractAddress = await contractAdr;
+    const contract = await sdk.getContract(contractAddress);
+    console.log("Listening to contract...");
+    contract.events.listenToAllEvents((event) => {
+      if (Number(event.data.value._hex) === 2) {
+        trigger()
+      }
+      console.log("ABCD ", Number(event.data.value._hex))
+    });
+  }
+  catch (e) {
+    console.log("Err", e)
+  }
+}
+
+runEvents().catch(err => console.error("Error running events:", err));
 
 
 

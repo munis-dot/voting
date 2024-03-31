@@ -11,11 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@thirdweb-dev/sdk": "^4.0.54",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "ethers": "^5.7.2",
     "express": "^4.18.2",
+    "firebase-admin": "^12.0.0",
     "mongoose": "^7.0.3",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "thirdweb": "^5.0.3"
   }
 }
