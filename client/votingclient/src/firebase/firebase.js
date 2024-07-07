@@ -4,6 +4,7 @@ import 'firebase/compat/firestore';
 import { getMessaging, getToken, onMessage} from "firebase/messaging";
 
 
+//notifications
 const firebaseConfig = {
     apiKey: "AIzaSyBXn027zXNfLZE8_8L4Epvr70rkIhZP6R0",
     authDomain: "chatapp-c1b95.firebaseapp.com",
