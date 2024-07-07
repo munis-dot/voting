@@ -6,6 +6,7 @@ import { voterContext } from '../context/voterContext';
 
 function tables() {
 
+  
   const {setVoter} = useContext(voterContext);
   const { contract } = useContract(contractAddress);
   const { data, isLoading } = useContractRead(contract, "getcanditates")
